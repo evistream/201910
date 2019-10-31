@@ -1,0 +1,8 @@
+.DS_Store
+.idea
+
+localconfig.py
+config/
+data/
+fig/
+slide_fig/
