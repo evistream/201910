@@ -9,5 +9,5 @@ def add():
 def commit(text=None):
     if text is None:
         text='.'
-
     subprocess.call(['git', 'commit', '-m', text])
+    subprocess.call(['git', 'push'])
