@@ -37,6 +37,8 @@ def scan(config_path,output_path,length=None,isOnlySpike=False):
     maxlab.util.offset()
     time.sleep(4)
 
+    # 計測開始
+    start_time = time.time()
     s = maxlab.saving.Saving()
     if isOnlySpike:
         s.start_spikes_only(output_path)
