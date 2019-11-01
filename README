@@ -3,4 +3,5 @@ git clone https://github.com/evistream/201910
 ln -s 201910 latest
 
 cd latest
-python init_dirtree.py
+vim localconfig.py
+python code/init_dirtree.py
