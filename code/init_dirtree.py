@@ -3,7 +3,8 @@ import os
 TEMP_DIRS=[
     'config/{}',
     'data/{}/scan',
-    'data/{}/selectelectrode',
+    'data/{}/selectelectrode/raw',
+    'data/{}/selectelectrode/spike',
     'data/{}/raw',
     'data/{}/spike',
     'data/{}/dataset',
