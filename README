@@ -5,3 +5,6 @@ ln -s 201910 latest
 cd latest
 vim localconfig.py
 python localconfig.py
+
+git config --local user.name "maxone1"
+git config --local user.email "maxone1@maxone1.com"
