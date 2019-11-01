@@ -4,4 +4,4 @@ ln -s 201910 latest
 
 cd latest
 vim localconfig.py
-python code/init_dirtree.py
+python localconfig.py
