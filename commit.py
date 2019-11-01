@@ -11,3 +11,4 @@ def commit(text=None):
         text='.'
     subprocess.call(['git', 'commit', '-m', text])
     subprocess.call(['git', 'push'])
+    subprocess.call(['ssh', 'n1', 'cd ~/Documents/sakurayama_workspace/201910; git pull'])

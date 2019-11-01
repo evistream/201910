@@ -1,0 +1,3 @@
+sakura
+git clone https://github.com/evistream/201910
+ln -s 201910 latest
