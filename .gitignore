@@ -8,3 +8,4 @@ config/
 data/
 fig/
 slide_fig/
+venv/
