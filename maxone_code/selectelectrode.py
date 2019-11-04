@@ -7,6 +7,7 @@ import maxlab.util
 import maxlab.saving
 import time
 import datetime
+import numpy as np
 
 from maxone_code.util import RECORD_GAIN,SAMPLING_FREQ
 from maxone_code.data import CfgFile
@@ -41,21 +42,19 @@ def scan(config_path,output_path,isOnlySpike=False):
     cfg_file = CfgFile(config_path)
     chan_elec_table = cfg_file.chan_elec_table
     elec_ids = chan_elec_table[chan_elec_table>=0]
+    chan_ids = np.where(chan_elec_table>=0)[0]
 
     # 刺激シーケンスの作成
     stimulations = {}
-    for elec_id in elec_ids:
+    for chan_id in chan_ids:
+        elec_id = chan_elec_table[elec_id]
         array.connect_electrode_to_stimulation(elec_id)
         stimulation = array.query_stimulation_at_electrode(elec_id)
         if not stimulation:
             print("Error: electrode: " + str(elec_id) + " cannot be stimulated")
         else:
-            try:
-                array.disconnect_electrode_from_stimulation(elec_id)
-            except:
-                stimulations[elec_id]=stimulation
-
-        time.sleep(0.1)
+            array.disconnect_amplifier_from_stimulation(chan_id)
+            stimulations[elec_id]=stimulation
 
     cmd_power_up_stim = {}
     cmd_power_down_stim = {}
