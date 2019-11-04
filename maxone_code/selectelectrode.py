@@ -47,7 +47,7 @@ def scan(config_path,output_path,isOnlySpike=False):
     # 刺激シーケンスの作成
     stimulations = {}
     for chan_id in chan_ids:
-        elec_id = chan_elec_table[elec_id]
+        elec_id = chan_elec_table[chan_id]
         array.connect_electrode_to_stimulation(elec_id)
         stimulation = array.query_stimulation_at_electrode(elec_id)
         if not stimulation:
