@@ -59,8 +59,8 @@ def scan(config_path,output_path,isOnlySpike=False):
     cmd_power_up_stim = {}
     cmd_power_down_stim = {}
     for elec_id,stim in stimulations.items():
-        cmd_power_up_stim[stim] = maxlab.chip.StimulationUnit(stim).power_up(True).connect(True).set_voltage_mode().dac_source(0)
-        cmd_power_down_stim[stim] = maxlab.chip.StimulationUnit(stim).power_up(False)
+        cmd_power_up_stim[elec_id] = maxlab.chip.StimulationUnit(stim).power_up(True).connect(True).set_voltage_mode().dac_source(0)
+        cmd_power_down_stim[elec_id] = maxlab.chip.StimulationUnit(stim).power_up(False)
 
     def append_stimulation_pulse(seq, amplitude):
         seq.append(maxlab.chip.DAC(0, 512 - amplitude))
@@ -71,13 +71,13 @@ def scan(config_path,output_path,isOnlySpike=False):
         return seq
 
     sequence = maxlab.Sequence()
-    for stim in stimulations:
+    for elec_id,stim in stimulations.items():
         sequence.append(maxlab.system.DelaySamples(WAIT_INTERVAL))
-        sequence.append(cmd_power_up_stim[stim])
+        sequence.append(cmd_power_up_stim[elec_id])
         for i in range(STIM_LOOP):
             append_stimulation_pulse(sequence, STIM_AMP)
             sequence.append(maxlab.system.DelaySamples(STIM_INTERVAL))
-        sequence.append(cmd_power_down_stim[stim])
+        sequence.append(cmd_power_down_stim[elec_id])
 
     wait_length = ((8+STIM_INTERVAL)*STIM_LOOP + WAIT_INTERVAL)*len(stimulations) + WAIT_BUFFER
 
