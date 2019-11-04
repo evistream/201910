@@ -50,8 +50,12 @@ def scan(config_path,output_path,isOnlySpike=False):
         if not stimulation:
             print("Error: electrode: " + str(elec_id) + " cannot be stimulated")
         else:
-            stimulations[elec_id]=stimulation
-        array.disconnect_electrode_from_stimulation(elec_id)
+            try:
+                array.disconnect_electrode_from_stimulation(elec_id)
+            except:
+                stimulations[elec_id]=stimulation
+
+        time.sleep(0.1)
 
     cmd_power_up_stim = {}
     cmd_power_down_stim = {}
