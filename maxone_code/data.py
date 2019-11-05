@@ -1,15 +1,15 @@
 import h5py
 import numpy as np
 import parse
+import pathlib
 
-from maxone_code.util import SIZE_CHANNEL
+from maxone_code.util import SIZE_CHANNEL,SAMPLING_FREQ
 
 class RawFile:
     def __init__(self, path):
+        self.path = path
         self.h5f = h5py.File(path, 'r')
         self.spikes_maxone = self.h5f['proc0']['spikeTimes']
-
-        self.channelmap = []
 
         # channel_id -> xdata_elec_id
         # 0 if unmapped, elec_id else
@@ -26,9 +26,35 @@ class RawFile:
         self.lsb=self.h5f["settings"]["lsb"][0]
         self.lsb_uV=self.lsb*1.0E6
 
+        self._stimsig=None
+
     @property
     def sig(self):
         return self.h5f['sig']
+
+    @property
+    def stimsig(self):
+        if self._stimsig is not None:
+            return self._stimsig
+        else:
+            path = pathlib.Path(self.path).parent.joinpath('stimsig.npy')
+            if path.exists():
+                _stimsig = np.load(str(path))
+                self._stimsig = _stimsig
+                return _stimsig
+            else:
+                sig = self.sig
+                length = sig.shape[1]
+                _stimsig = np.zeros(length)
+                sig.read_direct(_stimsig, source_sel=np.s_[SIZE_CHANNEL, :length], dest_sel=np.s_[:length])
+                np.save(str(path), _stimsig)
+                self._stimsig = _stimsig
+                return _stimsig
+
+    def disp(self):
+        print('sig shape:',self.sig.shape)
+        print('record time: {}[s]'.format(self.sig.shape[1] // SAMPLING_FREQ))
+        print('record channels:' ,len(list(filter(lambda x:x>0,self.channelmap))) )
 
 class CfgFile:
     def __init__(self, path):
