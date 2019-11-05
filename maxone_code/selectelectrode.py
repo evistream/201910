@@ -18,6 +18,7 @@ def scan(config_path,output_path,isOnlySpike=False):
     STIM_INTERVAL = 20000
     WAIT_INTERVAL = 20000
     WAIT_BUFFER = 20000*10
+    PRE_EXP_WAIT = 4  # [s]
 
     # 0. Initialize system into a defined state
     maxlab.util.initialize()
@@ -82,7 +83,7 @@ def scan(config_path,output_path,isOnlySpike=False):
     wait_length = ((8+STIM_INTERVAL)*STIM_LOOP + WAIT_INTERVAL)*len(stimulations) + WAIT_BUFFER
 
     # 計測開始
-    length = wait_length // SAMPLING_FREQ
+    length = wait_length // SAMPLING_FREQ + PRE_EXP_WAIT
     start_time = datetime.datetime.now()
     print("start recording [{}]".format(start_time.ctime()))
     print("plz wait: {0[0]}m {0[1]}s".format(divmod(length,60)))
@@ -91,6 +92,10 @@ def scan(config_path,output_path,isOnlySpike=False):
         s.start_spikes_only(output_path)
     else:
         s.start(output_path)
+
+    time.sleep(PRE_EXP_WAIT)
+
+    sequence.send()
 
     time.sleep(length)
 
